@@ -1,5 +1,7 @@
 const path = require('path');
 const babel = require('rollup-plugin-babel');
+const resolve = require('rollup-plugin-node-resolve');
+const commonjs = require('rollup-plugin-commonjs');
 const browsers = (process.env.BROWSERS || 'Chrome').split(',');
 const singleRun = process.env.NODE_ENV === 'DEVELOPMENT' ? false : true;
 
@@ -50,7 +52,11 @@ module.exports = function(config) {
             [`${root}/tests/**/*.js`]: ['rollup'],
         },
         rollupPreprocessor: {
-            plugins: [babel()],
+            plugins: [
+                babel(),
+                resolve({ browser: true }),
+                commonjs({ namedExports: { 'popper.js': ['Popper'] }})
+            ],
             format: 'iife',
             sourceMap: 'inline',
         },
